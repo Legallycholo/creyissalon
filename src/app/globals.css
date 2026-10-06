@@ -1345,11 +1345,22 @@ img {
   max-width: 430px;
   padding-bottom: 7px;
 }
-.hairstyle-showcase {
+.hairstyle-scroll {
+  --gallery-progress: 0%;
   position: relative;
   margin-top: 42px;
-  min-height: 650px;
+  height: 460svh;
+}
+.hairstyle-showcase {
+  position: sticky;
+  top: 98px;
+  height: calc(100svh - 98px);
+  min-height: 620px;
+  overflow: hidden;
   border-block: 1px solid #ffffff18;
+  background:
+    radial-gradient(circle at 50% 52%, #35372e 0%, transparent 43%),
+    var(--ink);
 }
 .hairstyle-canvas {
   position: absolute;
@@ -1371,48 +1382,84 @@ img {
   background: #d6bd9023;
   filter: blur(35px);
 }
-.hairstyle-controls {
+.hairstyle-overlay {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  pointer-events: none;
+  mix-blend-mode: difference;
+  color: white;
+}
+.hairstyle-overlay p {
+  margin-bottom: 14px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+}
+.hairstyle-overlay h3 {
+  max-width: 1000px;
+  font-family: var(--font-editorial), serif;
+  font-size: clamp(58px, 7vw, 108px);
+  font-weight: 400;
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+}
+.hairstyle-overlay h3 em {
+  font-weight: 400;
+}
+.hairstyle-progress {
   position: absolute;
   z-index: 3;
-  left: 50%;
-  bottom: 23px;
-  transform: translateX(-50%);
+  right: 30px;
+  bottom: 25px;
+  left: 30px;
   display: grid;
-  grid-template-columns: 48px minmax(210px, 330px) 48px;
-  align-items: center;
-  gap: 15px;
-  width: min(470px, calc(100% - 40px));
-}
-.hairstyle-controls button {
-  display: grid;
-  place-items: center;
-  width: 48px;
-  height: 48px;
-  border: 1px solid #ffffff2e;
-  border-radius: 50%;
-  background: #191b18c7;
-  color: var(--gold);
-  backdrop-filter: blur(8px);
-  transition: border-color 0.25s, transform 0.25s;
-}
-.hairstyle-controls button:hover {
-  border-color: var(--gold);
-  transform: scale(1.05);
-}
-.hairstyle-controls > div {
-  display: grid;
-  text-align: center;
-}
-.hairstyle-controls span {
-  color: #989d8e;
-  font-size: 9px;
-  letter-spacing: 0.17em;
-}
-.hairstyle-controls strong {
+  grid-template-columns: minmax(180px, 1fr) auto minmax(180px, 1fr);
+  align-items: end;
+  gap: 28px;
   color: var(--paper);
+}
+.hairstyle-progress > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: min(100%, 300px);
+}
+.hairstyle-progress span,
+.hairstyle-progress small {
+  font-size: 8px;
+  font-style: normal;
+  letter-spacing: 0.16em;
+  white-space: nowrap;
+}
+.hairstyle-progress i {
+  position: relative;
+  width: 100%;
+  height: 1px;
+  overflow: hidden;
+  background: #ffffff35;
+}
+.hairstyle-progress i b {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--gallery-progress);
+  background: var(--gold);
+  transition: width 0.08s linear;
+}
+.hairstyle-progress strong {
+  text-align: center;
   font-family: var(--font-editorial), serif;
   font-size: 22px;
   font-weight: 400;
+}
+.hairstyle-progress small {
+  justify-self: end;
+  color: #c3c7b8;
 }
 .hairstyle-static {
   display: none;
@@ -1708,7 +1755,9 @@ img {
     gap: 24px;
   }
   .hairstyle-showcase {
-    min-height: 590px;
+    top: 83px;
+    height: calc(100svh - 83px);
+    min-height: 0;
   }
   .footer-location {
     grid-column: 1/-1;
@@ -1827,43 +1876,69 @@ img {
   .signature-work-heading > p {
     font-size: 13px;
   }
-  .hairstyle-showcase {
-    min-height: 0;
+  .hairstyle-scroll {
+    height: auto;
     margin-top: 35px;
+  }
+  .hairstyle-showcase {
+    position: relative;
+    top: auto;
+    height: auto;
+    min-height: 0;
     padding-block: 25px;
+    overflow: visible;
+    background: transparent;
   }
   .hairstyle-canvas,
-  .hairstyle-controls {
+  .hairstyle-overlay,
+  .hairstyle-progress {
     display: none;
   }
   .hairstyle-static {
     display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: min(78vw, 350px);
-    gap: 18px;
-    overflow-x: auto;
-    padding: 0 4px 20px;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: thin;
-    scrollbar-color: var(--gold) #ffffff14;
+    gap: 56px;
+    padding: 10px 0 20px;
   }
   .hairstyle-static figure {
-    scroll-snap-align: center;
+    width: 92%;
+    opacity: 0;
+    transform: translate3d(-24px, 44px, 0) scale(0.97);
+    transition:
+      opacity 0.7s ease,
+      transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .hairstyle-static figure:nth-child(even) {
+    width: 84%;
+    margin-left: auto;
+    transform: translate3d(24px, 44px, 0) scale(0.97);
+  }
+  .hairstyle-static figure.is-visible {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
   }
   .hairstyle-static figure > div {
-    position: relative;
     aspect-ratio: 3 / 4;
     overflow: hidden;
     border: 1px solid #ffffff1f;
   }
   .hairstyle-static img {
+    object-fit: cover;
     filter: saturate(0.93) contrast(1.02);
   }
   .hairstyle-static figcaption {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
     margin-top: 12px;
     color: var(--paper);
     font-family: var(--font-editorial), serif;
     font-size: 21px;
+  }
+  .hairstyle-static figcaption span {
+    color: var(--gold);
+    font-family: var(--font-body), sans-serif;
+    font-size: 8px;
+    letter-spacing: 0.15em;
   }
   .signature-work-action {
     align-items: stretch;
@@ -2359,10 +2434,17 @@ img {
     display: none;
   }
   .hairstyle-canvas,
-  .hairstyle-controls {
+  .hairstyle-overlay,
+  .hairstyle-progress {
     display: none;
   }
+  .hairstyle-scroll {
+    height: auto;
+  }
   .hairstyle-showcase {
+    position: relative;
+    top: auto;
+    height: auto;
     min-height: 0;
     padding-block: 25px;
   }
@@ -2374,6 +2456,10 @@ img {
   .hairstyle-static figure > div {
     position: relative;
     aspect-ratio: 3 / 4;
+  }
+  .hairstyle-static figure {
+    opacity: 1;
+    transform: none;
   }
   .hairstyle-static figcaption {
     margin-top: 8px;
