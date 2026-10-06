@@ -328,8 +328,8 @@ export function Work({
             </Link>
           )}
         </Reveal>
-        {full && <p className="gallery-intro">{t.galleryBody}</p>}
-        <Gallery locale={locale} compact={!full} />
+        <p className="work-showcase-intro">{t.galleryBody}</p>
+        <HairstyleShowcase locale={locale} />
       </div>
     </section>
   );

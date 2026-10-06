@@ -65,7 +65,7 @@ export default function HairstyleShowcaseScene({
   const [quality, setQuality] = useState(1.5);
   return (
     <Canvas
-      frameloop={running ? "always" : "never"}
+      frameloop={running ? "always" : "demand"}
       dpr={[1, quality]}
       camera={{ position: [0, 0, 7.35], fov: 43 }}
       gl={{ alpha: true, antialias: false, powerPreference: "low-power" }}

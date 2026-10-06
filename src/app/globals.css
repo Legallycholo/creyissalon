@@ -574,6 +574,13 @@ img {
 .work-section .text-link:hover {
   color: var(--gold);
 }
+.work-showcase-intro {
+  max-width: 650px;
+  margin-top: -12px;
+  color: #b8bead;
+  font-size: 14px;
+  line-height: 1.85;
+}
 .gallery-filters {
   display: flex;
   align-items: center;
@@ -1409,6 +1416,9 @@ img {
 }
 .hairstyle-static {
   display: none;
+}
+.hairstyle-static figure > div {
+  position: relative;
 }
 .signature-work-action {
   display: flex;
