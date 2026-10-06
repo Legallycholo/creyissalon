@@ -5,6 +5,7 @@ import {
   business,
   businessSchema,
   href,
+  hairstyles,
   locales,
   resolvePage,
   routes,
@@ -43,6 +44,16 @@ test("Google Business Profile details remain exact and callable", () => {
   );
   assert.equal(business.displayPhone, "+1 939-640-5333");
   assert.equal(business.phone, "19396405333");
+});
+test("hairstyle showcase contains ten unique salon photographs", () => {
+  assert.equal(hairstyles.length, 10);
+  assert.equal(new Set(hairstyles.map((item) => item.image)).size, 10);
+  assert.ok(
+    hairstyles.every((item) =>
+      item.image.startsWith("/images/work/hairstyles/"),
+    ),
+  );
+  assert.ok(hairstyles.every((item) => item.reference !== true));
 });
 test("unconfigured booking routes to the translated contact section", () => {
   const original = business.whatsapp;

@@ -321,6 +321,7 @@ export function Gallery({
       (filter === 2 && item.category === "nails") ||
       (filter === 3 && item.before),
   );
+  const visibleItems = compact ? items.slice(0, 4) : items;
   useEffect(() => {
     if (selected) {
       dialog.current?.showModal();
@@ -355,8 +356,11 @@ export function Gallery({
         ))}
       </div>
       <div className={`gallery-grid ${compact ? "compact" : ""}`}>
-        {items.map((item) => (
-          <figure className="gallery-item" key={item.id}>
+        {visibleItems.map((item) => (
+          <figure
+            className={`gallery-item ${item.reference ? "is-reference" : "is-original"}`}
+            key={item.id}
+          >
             {item.before ? (
               <BeforeAfter item={item} locale={locale} />
             ) : (

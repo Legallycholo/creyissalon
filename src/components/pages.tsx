@@ -33,6 +33,7 @@ import {
   Reveal,
 } from "./interactions";
 import HeroArt from "./hero-art";
+import HairstyleShowcase from "./hairstyle-showcase";
 
 export function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
@@ -618,6 +619,43 @@ export function ContentPage({
       return (
         <>
           <PageIntro locale={locale} page={page} />
+          <section
+            className="signature-work"
+            aria-labelledby="signature-work-title"
+          >
+            <div className="container">
+              <div className="signature-work-heading">
+                <div>
+                  <Eyebrow>
+                    {locale === "es" ? "HECHO EN CREIYI'S" : "MADE AT CREIYI'S"}
+                  </Eyebrow>
+                  <h2 id="signature-work-title">
+                    {locale === "es" ? "Cabello que habla" : "Hair that speaks"}
+                    <br />
+                    <em>{locale === "es" ? "por ti." : "for you."}</em>
+                  </h2>
+                </div>
+                <p>
+                  {locale === "es"
+                    ? "Explora cortes, color, textura y acabados realizados en el salón. Usa las flechas para recorrer cada look."
+                    : "Explore cuts, color, texture, and finishes created in the salon. Use the arrows to move through every look."}
+                </p>
+              </div>
+              <HairstyleShowcase locale={locale} />
+              <div className="signature-work-action">
+                <p>
+                  {locale === "es"
+                    ? "¿Viste un estilo para ti? Conversemos sobre tu próximo look."
+                    : "Found a style for you? Let’s talk about your next look."}
+                </p>
+                <Action
+                  locale={locale}
+                  placement="hairstyle-showcase"
+                  service={locale === "es" ? "Cabello" : "Hair"}
+                />
+              </div>
+            </div>
+          </section>
           <section className="section gallery-page">
             <div className="container">
               <Gallery locale={locale} />

@@ -34,6 +34,16 @@ for (const [locale, paths] of Object.entries(pages)) {
     );
     assert.ok(html.includes("+1 939-640-5333"), `Business phone: ${url}`);
     assert.ok(html.includes('href="tel:+19396405333"'), `Phone link: ${url}`);
+    if (path === "trabajos" || path === "work") {
+      assert.ok(
+        html.includes("/images/work/hairstyles/01-caramel-pixie.jpg"),
+        `Hairstyle work: ${url}`,
+      );
+      assert.ok(
+        html.includes(locale === "es" ? "Cabello que habla" : "Hair that speaks"),
+        `Hairstyle showcase heading: ${url}`,
+      );
+    }
     verified++;
   }
 }

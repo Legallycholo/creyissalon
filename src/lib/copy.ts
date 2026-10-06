@@ -17,7 +17,7 @@ const es = {
   more: "Conoce el salón",
   reference: "Imagen de inspiración",
   preview:
-    "Vista previa de diseño · Fotografías de referencia. Contacto, ubicación y reseñas pendientes de confirmar.",
+    "Vista previa de diseño · WhatsApp, horario y reseñas pendientes de confirmar.",
   eyebrow: "BELLEZA CON INTENCIÓN · PUERTO RICO",
   heroFirst: "Tu belleza.",
   heroSecond: "Tu momento.",
@@ -61,11 +61,11 @@ const es = {
   galleryTitle: "Pequeños detalles.",
   galleryItalic: "Grandes sensaciones.",
   galleryBody:
-    "Explora nuestra dirección de estilo. Este espacio pronto mostrará el trabajo real del salón y sus transformaciones.",
+    "Explora cortes, color y acabados realizados en Creiyi's Salon. Abre cualquier fotografía para apreciar cada detalle.",
   filters: ["Todo", "Cabello", "Uñas", "Antes & después"],
   emptyTransform: "Las transformaciones reales del salón llegarán pronto.",
   emptyBody:
-    "Mientras tanto, explora las imágenes de inspiración de cabello y uñas.",
+    "Todavía no hemos publicado comparaciones de antes y después. Explora los trabajos de cabello disponibles.",
   before: "Antes",
   after: "Después",
   close: "Cerrar imagen",
@@ -168,7 +168,7 @@ const en: typeof es = {
   more: "Meet the salon",
   reference: "Inspiration image",
   preview:
-    "Design preview · Reference photography. Contact details, location, and reviews await confirmation.",
+    "Design preview · WhatsApp, business hours, and reviews await confirmation.",
   eyebrow: "BEAUTY WITH INTENTION · PUERTO RICO",
   heroFirst: "Your beauty.",
   heroSecond: "Your moment.",
@@ -212,10 +212,11 @@ const en: typeof es = {
   galleryTitle: "Little details.",
   galleryItalic: "Beautiful feelings.",
   galleryBody:
-    "Explore our style direction. This space will soon feature the salon’s actual work and transformations.",
+    "Explore cuts, color, and finishes created at Creiyi's Salon. Open any photograph to appreciate every detail.",
   filters: ["All", "Hair", "Nails", "Before & after"],
   emptyTransform: "Real salon transformations are coming soon.",
-  emptyBody: "In the meantime, explore our hair and nail inspiration images.",
+  emptyBody:
+    "Before-and-after comparisons have not been published yet. Explore the available hairstyle work.",
   before: "Before",
   after: "After",
   close: "Close image",

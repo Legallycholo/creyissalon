@@ -621,7 +621,12 @@ img {
 }
 .gallery-image img {
   transition: transform 0.7s;
+}
+.gallery-item.is-reference .gallery-image img {
   filter: saturate(0.55);
+}
+.gallery-item.is-original .gallery-image img {
+  filter: saturate(0.93) contrast(1.02);
 }
 .gallery-image:hover img {
   transform: scale(1.035);
@@ -1304,6 +1309,122 @@ img {
   margin-bottom: 25px;
   color: #b8bead;
 }
+.signature-work {
+  padding-block: 105px 90px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 48%, #404233 0%, transparent 37%),
+    var(--ink);
+  color: var(--paper);
+}
+.signature-work-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+  align-items: end;
+  gap: 70px;
+  position: relative;
+  z-index: 2;
+}
+.signature-work-heading .eyebrow {
+  color: var(--gold);
+}
+.signature-work-heading h2 em {
+  color: var(--gold);
+}
+.signature-work-heading > p {
+  color: #bfc3b4;
+  font-size: 14px;
+  line-height: 1.85;
+  max-width: 430px;
+  padding-bottom: 7px;
+}
+.hairstyle-showcase {
+  position: relative;
+  margin-top: 42px;
+  min-height: 650px;
+  border-block: 1px solid #ffffff18;
+}
+.hairstyle-canvas {
+  position: absolute;
+  inset: 0;
+}
+.hairstyle-canvas canvas {
+  position: relative !important;
+  z-index: 1;
+}
+.hairstyle-stage-glow {
+  position: absolute;
+  z-index: 0;
+  left: 50%;
+  bottom: 8%;
+  width: min(520px, 55%);
+  height: 70px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: #d6bd9023;
+  filter: blur(35px);
+}
+.hairstyle-controls {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  bottom: 23px;
+  transform: translateX(-50%);
+  display: grid;
+  grid-template-columns: 48px minmax(210px, 330px) 48px;
+  align-items: center;
+  gap: 15px;
+  width: min(470px, calc(100% - 40px));
+}
+.hairstyle-controls button {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 1px solid #ffffff2e;
+  border-radius: 50%;
+  background: #191b18c7;
+  color: var(--gold);
+  backdrop-filter: blur(8px);
+  transition: border-color 0.25s, transform 0.25s;
+}
+.hairstyle-controls button:hover {
+  border-color: var(--gold);
+  transform: scale(1.05);
+}
+.hairstyle-controls > div {
+  display: grid;
+  text-align: center;
+}
+.hairstyle-controls span {
+  color: #989d8e;
+  font-size: 9px;
+  letter-spacing: 0.17em;
+}
+.hairstyle-controls strong {
+  color: var(--paper);
+  font-family: var(--font-editorial), serif;
+  font-size: 22px;
+  font-weight: 400;
+}
+.hairstyle-static {
+  display: none;
+}
+.signature-work-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  padding-top: 35px;
+  border-top: 1px solid #ffffff18;
+}
+.signature-work-action p {
+  color: #bfc3b4;
+  font-size: 13px;
+}
+.signature-work-action .button {
+  flex-shrink: 0;
+}
 .contact-full {
   padding-top: 0;
 }
@@ -1572,6 +1693,13 @@ img {
   .footer-top {
     grid-template-columns: 1fr 1fr;
   }
+  .signature-work-heading {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .hairstyle-showcase {
+    min-height: 590px;
+  }
   .footer-location {
     grid-column: 1/-1;
     padding: 20px;
@@ -1682,6 +1810,58 @@ img {
     width: 90%;
     height: 70%;
     opacity: 0.22;
+  }
+  .signature-work {
+    padding-block: 75px 65px;
+  }
+  .signature-work-heading > p {
+    font-size: 13px;
+  }
+  .hairstyle-showcase {
+    min-height: 0;
+    margin-top: 35px;
+    padding-block: 25px;
+  }
+  .hairstyle-canvas,
+  .hairstyle-controls {
+    display: none;
+  }
+  .hairstyle-static {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: min(78vw, 350px);
+    gap: 18px;
+    overflow-x: auto;
+    padding: 0 4px 20px;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    scrollbar-color: var(--gold) #ffffff14;
+  }
+  .hairstyle-static figure {
+    scroll-snap-align: center;
+  }
+  .hairstyle-static figure > div {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    border: 1px solid #ffffff1f;
+  }
+  .hairstyle-static img {
+    filter: saturate(0.93) contrast(1.02);
+  }
+  .hairstyle-static figcaption {
+    margin-top: 12px;
+    color: var(--paper);
+    font-family: var(--font-editorial), serif;
+    font-size: 21px;
+  }
+  .signature-work-action {
+    align-items: stretch;
+    flex-direction: column;
+    padding-top: 28px;
+  }
+  .signature-work-action .button {
+    width: 100%;
   }
   .ribbon {
     padding: 21px 15px;
@@ -2167,6 +2347,26 @@ img {
   }
   .hero-art canvas {
     display: none;
+  }
+  .hairstyle-canvas,
+  .hairstyle-controls {
+    display: none;
+  }
+  .hairstyle-showcase {
+    min-height: 0;
+    padding-block: 25px;
+  }
+  .hairstyle-static {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  .hairstyle-static figure > div {
+    position: relative;
+    aspect-ratio: 3 / 4;
+  }
+  .hairstyle-static figcaption {
+    margin-top: 8px;
   }
   .gallery-image:hover img {
     transform: none;

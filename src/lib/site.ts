@@ -139,14 +139,84 @@ export type PortfolioItem = {
   before?: string;
   reference?: boolean;
 };
-export const portfolio: PortfolioItem[] = services.map((service) => ({
-  id: service.id,
-  category: service.id,
-  title: service.title,
-  image: service.image,
-  alt: service.alt,
-  reference: true,
+export const hairstyles: PortfolioItem[] = [
+  [
+    "caramel-pixie",
+    "Pixie caramelo",
+    "Caramel pixie",
+    "01-caramel-pixie.jpg",
+  ],
+  [
+    "dark-layered-curls",
+    "Capas con movimiento",
+    "Layered movement",
+    "02-dark-layered-curls.jpg",
+  ],
+  [
+    "long-sleek-black",
+    "Largo pulido",
+    "Long and sleek",
+    "03-long-sleek-black.jpg",
+  ],
+  [
+    "soft-brunette-curls",
+    "Rizos suaves",
+    "Soft brunette curls",
+    "04-soft-brunette-curls.jpg",
+  ],
+  ["silver-bob", "Bob plateado", "Silver bob", "05-silver-bob.jpg"],
+  [
+    "honey-blonde-sleek",
+    "Rubio miel pulido",
+    "Sleek honey blonde",
+    "06-honey-blonde-sleek.jpg",
+  ],
+  [
+    "burgundy-layers",
+    "Capas borgoña",
+    "Burgundy layers",
+    "07-burgundy-layers.jpg",
+  ],
+  [
+    "warm-brunette-waves",
+    "Ondas cálidas",
+    "Warm brunette waves",
+    "08-warm-brunette-waves.jpg",
+  ],
+  [
+    "precision-dark-bob",
+    "Bob de precisión",
+    "Precision dark bob",
+    "09-precision-dark-bob.jpg",
+  ],
+  [
+    "honey-blonde-waves",
+    "Ondas rubio miel",
+    "Honey blonde waves",
+    "10-honey-blonde-waves.jpg",
+  ],
+].map(([id, es, en, file]) => ({
+  id,
+  category: "hair" as const,
+  title: { es, en },
+  image: `/images/work/hairstyles/${file}`,
+  alt: {
+    es: `Trabajo de cabello de Creiyi's Salon: ${es.toLowerCase()}`,
+    en: `Hairstyle work by Creiyi's Salon: ${en.toLowerCase()}`,
+  },
 }));
+
+export const portfolio: PortfolioItem[] = [
+  ...hairstyles,
+  {
+    id: services[1].id,
+    category: services[1].id,
+    title: services[1].title,
+    image: services[1].image,
+    alt: services[1].alt,
+    reference: true,
+  },
+];
 export type Review = { name: string; text: Localized; sourceUrl: string };
 export const reviews: Review[] = [];
 export function businessSchema(details = business) {
