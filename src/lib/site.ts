@@ -1,6 +1,12 @@
 export type Locale = "es" | "en";
 export type PageKey =
-  "home" | "services" | "work" | "about" | "contact" | "privacy";
+  | "home"
+  | "services"
+  | "work"
+  | "reviews"
+  | "about"
+  | "contact"
+  | "privacy";
 export type Localized = Record<Locale, string>;
 export const locales: Locale[] = ["es", "en"];
 export const routes: Record<Locale, Record<PageKey, string>> = {
@@ -8,6 +14,7 @@ export const routes: Record<Locale, Record<PageKey, string>> = {
     home: "",
     services: "servicios",
     work: "trabajos",
+    reviews: "resenas",
     about: "sobre-creyis",
     contact: "contacto",
     privacy: "privacidad",
@@ -16,6 +23,7 @@ export const routes: Record<Locale, Record<PageKey, string>> = {
     home: "",
     services: "services",
     work: "work",
+    reviews: "reviews",
     about: "about",
     contact: "contact",
     privacy: "privacy",
@@ -68,7 +76,8 @@ export const business = {
   instagram: "",
   googleMaps:
     "https://www.google.com/maps/search/?api=1&query=1003%20Cll%20Alejandria%2C%20San%20Juan%2C%2000920%2C%20Puerto%20Rico",
-  googleReviews: "",
+  googleReviews:
+    "https://www.google.com/search?sca_esv=d0fa25ced5188e1a&sxsrf=APpeQnuJkQwbQX2L9sZHsZ7ga3RhWoYX_Q%3A1791648812778&q=Creiyi%E2%80%99s%20Salon&stick=H4sIAAAAAAAAAONgU1I1qLBINjA2s7RMTDFPMklJMzO2Mqgws0wyM0kxTUu0MDBKNk9MXMQq4FyUmlmZ-ahhZrFCcGJOfh4AaPb_rTwAAAA&mat=CUa-0Oee9oz7&ved=2ahUKEwiYwbD466-XAxUmFzQIHSxxDfkQrMcEegQIIRAC#mpd=~18126133762613886534/customers/reviews",
   priceRange: "",
   images: [] as string[],
 };
@@ -217,8 +226,6 @@ export const portfolio: PortfolioItem[] = [
     reference: true,
   },
 ];
-export type Review = { name: string; text: Localized; sourceUrl: string };
-export const reviews: Review[] = [];
 export function businessSchema(details = business) {
   if (!isLaunchReady(details)) return null;
   const business = details;

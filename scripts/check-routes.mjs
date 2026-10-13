@@ -2,8 +2,8 @@ import assert from "node:assert/strict";
 
 const origin = process.argv[2] || "http://localhost:3000";
 const pages = {
-  es: ["", "servicios", "trabajos", "sobre-creyis", "contacto", "privacidad"],
-  en: ["", "services", "work", "about", "contact", "privacy"],
+  es: ["", "servicios", "trabajos", "resenas", "sobre-creyis", "contacto", "privacidad"],
+  en: ["", "services", "work", "reviews", "about", "contact", "privacy"],
 };
 let verified = 0;
 for (const [locale, paths] of Object.entries(pages)) {

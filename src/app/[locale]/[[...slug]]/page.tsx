@@ -48,6 +48,8 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
         ? t.servicesBody
         : page === "work"
           ? t.galleryBody
+          : page === "reviews"
+            ? t.reviewsBody
           : page === "about"
             ? t.aboutBody
             : page === "privacy"
@@ -56,7 +58,10 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   return {
     title,
     description,
-    icons: { icon: "/favicon.svg" },
+    icons: {
+      icon: [{ url: "/favicon.png", type: "image/png", sizes: "64x64" }],
+      apple: "/images/brand/creyis-salon-logo.png",
+    },
     robots: { index: launchReady, follow: launchReady },
     ...(business.siteUrl
       ? {

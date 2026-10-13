@@ -144,18 +144,25 @@ export default function HairstyleShowcaseScene({
   images,
   progress,
   running,
+  mobile,
+  onFallback,
 }: {
   images: string[];
   progress: ProgressRef;
   running: boolean;
+  mobile: boolean;
+  onFallback: () => void;
 }) {
-  const [quality, setQuality] = useState(1.35);
+  const [quality, setQuality] = useState(mobile ? 1 : 1.35);
   return (
     <Canvas
       frameloop={running ? "always" : "demand"}
       dpr={[1, quality]}
-      camera={{ position: [0, 0, 8.6], fov: 44 }}
+      camera={{ position: [0, 0, mobile ? 9.8 : 8.6], fov: mobile ? 54 : 44 }}
       gl={{ alpha: true, antialias: false, powerPreference: "low-power" }}
+      onCreated={({ gl }) => {
+        gl.domElement.addEventListener("webglcontextlost", onFallback, { once: true });
+      }}
     >
       <fog attach="fog" args={["#191b18", 8, 19]} />
       <Gallery images={images} progress={progress} />
@@ -163,7 +170,7 @@ export default function HairstyleShowcaseScene({
         <PerformanceMonitor
           bounds={() => [35, 55]}
           onDecline={() => setQuality(1)}
-          onFallback={() => setQuality(1)}
+          onFallback={onFallback}
           flipflops={2}
         />
       )}

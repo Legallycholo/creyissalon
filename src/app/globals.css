@@ -244,6 +244,12 @@ img {
   align-items: center;
   flex-shrink: 0;
 }
+.brand-logo {
+  display: block;
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+}
 .wordmark > span {
   font-family: var(--font-editorial), serif;
   line-height: 0.9;
@@ -1163,6 +1169,11 @@ img {
 }
 .footer-brand {
   color: var(--paper);
+  align-items: flex-start;
+}
+.footer-brand .brand-logo {
+  width: 110px;
+  height: 110px;
 }
 .footer-brand > span {
   font-size: 57px;
@@ -1318,7 +1329,7 @@ img {
 }
 .signature-work {
   padding-block: 105px 90px;
-  overflow: hidden;
+  overflow: clip;
   background:
     radial-gradient(circle at 50% 48%, #404233 0%, transparent 37%),
     var(--ink);
@@ -1628,6 +1639,10 @@ img {
   }
   .wordmark > span {
     font-size: 44px;
+  }
+  .brand-logo {
+    width: 60px;
+    height: 60px;
   }
   .wordmark small {
     font-size: 7px;
@@ -1939,6 +1954,49 @@ img {
     font-family: var(--font-body), sans-serif;
     font-size: 8px;
     letter-spacing: 0.15em;
+  }
+  .hairstyle-scroll.is-enhanced {
+    height: 420svh;
+  }
+  .hairstyle-scroll.is-enhanced .hairstyle-showcase {
+    position: sticky;
+    top: 83px;
+    height: calc(100svh - 83px);
+    min-height: 520px;
+    padding-block: 0;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 50% 52%, #35372e 0%, transparent 43%),
+      var(--ink);
+  }
+  .hairstyle-scroll.is-enhanced .hairstyle-canvas,
+  .hairstyle-scroll.is-enhanced .hairstyle-overlay,
+  .hairstyle-scroll.is-enhanced .hairstyle-progress {
+    display: block;
+  }
+  .hairstyle-scroll.is-enhanced .hairstyle-overlay {
+    display: flex;
+  }
+  .hairstyle-scroll.is-enhanced .hairstyle-static {
+    display: none;
+  }
+  .hairstyle-scroll.is-enhanced .hairstyle-overlay h3 {
+    font-size: clamp(46px, 14vw, 74px);
+    max-width: 92%;
+  }
+  .hairstyle-scroll.is-enhanced .hairstyle-progress {
+    right: 18px;
+    bottom: 22px;
+    left: 18px;
+    grid-template-columns: 1fr auto;
+    gap: 14px;
+  }
+  .hairstyle-scroll.is-enhanced .hairstyle-progress > strong {
+    justify-self: end;
+    font-size: 18px;
+  }
+  .hairstyle-scroll.is-enhanced .hairstyle-progress > small {
+    display: none;
   }
   .signature-work-action {
     align-items: stretch;
@@ -2419,6 +2477,321 @@ img {
     gap: 17px;
   }
 }
+
+/* Google reviews */
+.review-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 13px;
+  margin-top: 32px;
+}
+.review-actions .text-link {
+  margin-top: 0;
+}
+.reviews-intro .review-actions {
+  justify-content: flex-start;
+}
+.review-summary {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.review-summary strong {
+  color: var(--gold-dark);
+  font-family: var(--font-editorial), serif;
+  font-size: 28px;
+}
+.reviews-page {
+  padding-top: 30px;
+  background: var(--paper-deep);
+}
+.reviews-page-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+.review-card {
+  display: flex;
+  min-height: 285px;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 26px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+.review-stars {
+  display: flex;
+  gap: 3px;
+  color: #aaa89f;
+  margin-bottom: 24px;
+}
+.review-stars .is-filled {
+  color: #a87932;
+  fill: currentColor;
+}
+.review-card blockquote {
+  flex: 1;
+  font-family: var(--font-editorial), serif;
+  font-size: 22px;
+  line-height: 1.45;
+}
+.review-card footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  padding-top: 24px;
+  margin-top: 24px;
+  border-top: 1px solid var(--line);
+}
+.review-card footer div {
+  display: grid;
+  gap: 2px;
+}
+.review-card footer strong {
+  font-size: 13px;
+}
+.review-card footer small {
+  color: var(--muted);
+  font-size: 10px;
+}
+.review-card footer a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--gold-dark);
+  font-size: 11px;
+}
+.review-load-more {
+  display: flex;
+  margin: 32px auto 0;
+  color: var(--ink);
+  border-color: var(--gold-dark);
+}
+.reviews-empty {
+  max-width: 620px;
+  margin-inline: auto;
+  padding: 50px;
+  text-align: center;
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+.reviews-empty svg {
+  color: var(--gold-dark);
+  margin-bottom: 18px;
+}
+
+/* Andrea chat */
+.andrea-widget {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 80;
+}
+.andrea-toggle {
+  position: relative;
+  display: flex;
+  width: 58px;
+  height: 58px;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  border-radius: 50%;
+  color: var(--ink);
+  background: var(--gold);
+  box-shadow: 0 13px 35px #0004;
+}
+.andrea-unread {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  background: #4fc78a;
+}
+.andrea-attention {
+  width: min(290px, calc(100vw - 44px));
+  margin: 0 0 10px auto;
+  padding: 12px 15px;
+  border: 1px solid #d6bd9060;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 10px 30px #0002;
+  font-size: 12px;
+  line-height: 1.55;
+}
+.andrea-panel {
+  position: absolute;
+  right: 0;
+  bottom: 72px;
+  display: flex;
+  width: min(380px, calc(100vw - 32px));
+  height: min(570px, calc(100dvh - 125px));
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #d6bd9050;
+  border-radius: 18px;
+  background: var(--paper);
+  box-shadow: 0 24px 65px #0005;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(12px) scale(0.97);
+  transform-origin: bottom right;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.andrea-panel.is-open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+.andrea-header {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 13px 15px;
+  background: var(--ink);
+  color: var(--paper);
+}
+.andrea-avatar,
+.andrea-message.assistant > span {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--ink);
+  font-weight: 700;
+}
+.andrea-avatar {
+  width: 38px;
+  height: 38px;
+}
+.andrea-header > div {
+  display: grid;
+  flex: 1;
+  line-height: 1.25;
+}
+.andrea-header strong {
+  font-size: 14px;
+}
+.andrea-header small {
+  color: #bdc1b5;
+  font-size: 10px;
+}
+.andrea-header a,
+.andrea-header button {
+  display: flex;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--gold);
+}
+.andrea-strip {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 15px;
+  border-bottom: 1px solid var(--line);
+  color: var(--gold-dark);
+  font-size: 10px;
+}
+.andrea-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 17px;
+}
+.andrea-message {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  margin-bottom: 13px;
+}
+.andrea-message.user {
+  justify-content: flex-end;
+}
+.andrea-message.assistant > span {
+  width: 26px;
+  height: 26px;
+  font-size: 10px;
+}
+.andrea-message p {
+  max-width: 80%;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 15px 15px 15px 3px;
+  background: white;
+  font-size: 12px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+.andrea-message.user p {
+  border-color: var(--ink);
+  border-radius: 15px 15px 3px 15px;
+  background: var(--ink);
+  color: var(--paper);
+}
+.andrea-typing p {
+  display: flex;
+  gap: 4px;
+}
+.andrea-typing i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--muted);
+  animation: andrea-pulse 0.9s infinite alternate;
+}
+.andrea-typing i:nth-child(2) { animation-delay: 0.18s; }
+.andrea-typing i:nth-child(3) { animation-delay: 0.36s; }
+@keyframes andrea-pulse { to { opacity: 0.25; transform: translateY(-2px); } }
+.andrea-form {
+  display: flex;
+  gap: 9px;
+  padding: 12px;
+  border-top: 1px solid var(--line);
+  background: white;
+}
+.andrea-form input {
+  min-width: 0;
+  flex: 1;
+  padding: 11px 13px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 12px;
+}
+.andrea-form button {
+  display: flex;
+  width: 42px;
+  height: 42px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--ink);
+}
+.andrea-form button:disabled { opacity: 0.45; }
+
+@media (max-width: 900px) {
+  .reviews-page-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+  .reviews-page-grid { grid-template-columns: 1fr; }
+  .review-actions { align-items: stretch; flex-direction: column; }
+  .review-actions .button, .review-actions .text-link { width: 100%; }
+  .reviews-empty { padding: 35px 24px; }
+  .andrea-widget { right: 14px; bottom: calc(78px + env(safe-area-inset-bottom)); }
+  .andrea-panel { height: min(540px, calc(100dvh - 175px)); }
+}
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -2466,5 +2839,8 @@ img {
   }
   .gallery-image:hover img {
     transform: none;
+  }
+  .andrea-typing i {
+    animation: none;
   }
 }

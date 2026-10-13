@@ -10,6 +10,7 @@ import {
   MessageCircle,
   Phone,
   ArrowDown,
+  ExternalLink,
 } from "lucide-react";
 import { copy } from "@/lib/copy";
 import {
@@ -17,11 +18,18 @@ import {
   bookingUrl,
   href,
   launchReady,
-  reviews,
   services,
   type Locale,
   type PageKey,
 } from "@/lib/site";
+import {
+  googleReviews,
+  googleReviewSnapshot,
+} from "@/lib/google-reviews.generated";
+import {
+  GOOGLE_LEAVE_REVIEW_URL,
+  GOOGLE_REVIEWS_URL,
+} from "@/lib/reviews";
 import {
   Action,
   Directions,
@@ -34,6 +42,7 @@ import {
 } from "./interactions";
 import HeroArt from "./hero-art";
 import HairstyleShowcase from "./hairstyle-showcase";
+import ReviewList from "./review-list";
 
 export function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
@@ -72,15 +81,19 @@ export function Shell({
         <div className="container footer-top">
           <div>
             <Link href={href(locale)} className="wordmark footer-brand">
-              <span>
-                creiyi's<span className="brand-dot">.</span>
-              </span>
-              <small>BEAUTY SALON</small>
+              <Image
+                className="brand-logo"
+                src="/images/brand/creyis-salon-logo.png"
+                width={512}
+                height={512}
+                sizes="110px"
+                alt=""
+              />
             </Link>
             <p>{t.footerLine}</p>
           </div>
           <div className="footer-nav">
-            {(["services", "work", "about", "contact"] as PageKey[]).map(
+            {(["services", "work", "reviews", "about", "contact"] as PageKey[]).map(
               (key) => (
                 <Link key={key} href={href(locale, key)}>
                   {t.nav[key]}
@@ -336,21 +349,22 @@ export function Work({
 }
 export function Care({ locale }: { locale: Locale }) {
   const t = copy(locale);
+  const featured = googleReviews.filter((review) => review.text).slice(0, 6);
   return (
     <section className="care-section">
       <div className="care-orbit" aria-hidden="true" />
       <div className="container">
         <Reveal>
           <Flower2 className="care-flower" size={42} strokeWidth={0.8} />
-          <Eyebrow>{reviews.length ? t.reviewsTag : t.careTag}</Eyebrow>
-          {reviews.length ? (
+          <Eyebrow>{t.reviewsTag}</Eyebrow>
+          {featured.length ? (
             <>
               <h2>{t.reviewsTitle}</h2>
               <div className="review-grid">
-                {reviews.map((review) => (
-                  <figure key={review.name}>
-                    <blockquote>{review.text[locale]}</blockquote>
-                    <figcaption>{review.name}</figcaption>
+                {featured.map((review) => (
+                  <figure key={review.id}>
+                    <blockquote>{review.text}</blockquote>
+                    <figcaption>{review.author}</figcaption>
                     <a
                       href={review.sourceUrl}
                       target="_blank"
@@ -365,10 +379,21 @@ export function Care({ locale }: { locale: Locale }) {
             </>
           ) : (
             <>
-              <h2>{t.careQuote}</h2>
-              <p>{t.careBody}</p>
+              <h2>{t.reviewsTitle}</h2>
+              <p>{t.reviewsEmpty}</p>
             </>
           )}
+          <div className="review-actions">
+            <Link href={href(locale, "reviews")} className="button button-gold">
+              {t.nav.reviews}
+            </Link>
+            <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="button button-outline">
+              {t.readGoogleReviews}<ExternalLink size={15} aria-hidden="true" />
+            </a>
+            <a href={GOOGLE_LEAVE_REVIEW_URL} target="_blank" rel="noopener noreferrer" className="text-link">
+              {t.leaveReview}<ExternalLink size={14} aria-hidden="true" />
+            </a>
+          </div>
           <span className="care-signature">creiyi's</span>
         </Reveal>
       </div>
@@ -548,7 +573,7 @@ export function PageIntro({
   page,
 }: {
   locale: Locale;
-  page: Exclude<PageKey, "home" | "privacy">;
+  page: Exclude<PageKey, "home" | "privacy" | "reviews">;
 }) {
   const t = copy(locale);
   const titles = {
@@ -577,6 +602,48 @@ export function PageIntro({
       </h1>
       <p>{body}</p>
     </section>
+  );
+}
+
+function ReviewsPage({ locale }: { locale: Locale }) {
+  const t = copy(locale);
+  return (
+    <>
+      <section className="page-intro container reviews-intro">
+        <div className="breadcrumbs">
+          <Link href={href(locale)}>{t.nav.home}</Link><span>/</span><span>{t.nav.reviews}</span>
+        </div>
+        <Eyebrow>{t.reviewsTag}</Eyebrow>
+        <h1>{t.reviewsTitle}</h1>
+        <p>{t.reviewsBody}</p>
+        {googleReviewSnapshot.rating !== null && (
+          <p className="review-summary">
+            <strong>{googleReviewSnapshot.rating.toFixed(1)} ★</strong>
+            <span>{googleReviewSnapshot.total} Google reviews</span>
+          </p>
+        )}
+        <div className="review-actions">
+          <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="button button-gold">
+            {t.readGoogleReviews}<ExternalLink size={15} aria-hidden="true" />
+          </a>
+          <a href={GOOGLE_LEAVE_REVIEW_URL} target="_blank" rel="noopener noreferrer" className="button button-outline">
+            {t.leaveReview}<ExternalLink size={15} aria-hidden="true" />
+          </a>
+        </div>
+      </section>
+      <section className="section reviews-page">
+        <div className="container">
+          {googleReviews.length ? (
+            <ReviewList reviews={googleReviews} locale={locale} />
+          ) : (
+            <div className="reviews-empty">
+              <Flower2 size={35} strokeWidth={1} aria-hidden="true" />
+              <p>{t.reviewsEmpty}</p>
+            </div>
+          )}
+        </div>
+      </section>
+    </>
   );
 }
 export function HomePage({ locale }: { locale: Locale }) {
@@ -664,6 +731,8 @@ export function ContentPage({
           <CTA locale={locale} />
         </>
       );
+    case "reviews":
+      return <ReviewsPage locale={locale} />;
     case "about":
       return (
         <>

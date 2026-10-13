@@ -2,30 +2,66 @@
 
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { Component, useEffect, useRef, useState, type ReactNode } from "react";
 import { hairstyles, type Locale } from "@/lib/site";
 
 const Scene = dynamic(() => import("./hairstyle-showcase-scene"), {
   ssr: false,
 });
 
+class SceneBoundary extends Component<
+  { children: ReactNode; onFailure: () => void },
+  { failed: boolean }
+> {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  componentDidCatch() {
+    this.props.onFailure();
+  }
+  render() {
+    return this.state.failed ? null : this.props.children;
+  }
+}
+
 export default function HairstyleShowcase({ locale }: { locale: Locale }) {
   const [active, setActive] = useState(0);
   const [visible, setVisible] = useState(false);
   const [enhanced, setEnhanced] = useState(false);
+  const [mobile, setMobile] = useState(false);
   const stage = useRef<HTMLDivElement>(null);
   const progress = useRef(0);
   const frame = useRef<number | null>(null);
   const current = hairstyles[active];
 
   useEffect(() => {
-    const query = window.matchMedia(
-      "(min-width: 701px) and (prefers-reduced-motion: no-preference)",
-    );
-    const sync = () => setEnhanced(query.matches);
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const connection = (
+      navigator as Navigator & { connection?: { saveData?: boolean } }
+    ).connection;
+    const sync = () => {
+      setMobile(window.innerWidth <= 700);
+      if (query.matches || connection?.saveData) {
+        setEnhanced(false);
+        return;
+      }
+      try {
+        const canvas = document.createElement("canvas");
+        const gl = canvas.getContext("webgl2", { powerPreference: "low-power" });
+        setEnhanced(Boolean(gl));
+        gl?.getExtension("WEBGL_lose_context")?.loseContext();
+      } catch {
+        setEnhanced(false);
+      }
+    };
     sync();
     query.addEventListener("change", sync);
-    return () => query.removeEventListener("change", sync);
+    window.addEventListener("resize", sync);
+    return () => {
+      query.removeEventListener("change", sync);
+      window.removeEventListener("resize", sync);
+    };
   }, []);
 
   useEffect(() => {
@@ -103,15 +139,22 @@ export default function HairstyleShowcase({ locale }: { locale: Locale }) {
   }, []);
 
   return (
-    <div className="hairstyle-scroll" ref={stage}>
+    <div
+      className={`hairstyle-scroll ${enhanced ? "is-enhanced" : "is-fallback"}`}
+      ref={stage}
+    >
       <div className="hairstyle-showcase">
         {enhanced && (
           <div className="hairstyle-canvas" aria-hidden="true">
-            <Scene
-              images={hairstyles.map((item) => item.image)}
-              progress={progress}
-              running={visible}
-            />
+            <SceneBoundary onFailure={() => setEnhanced(false)}>
+              <Scene
+                images={hairstyles.map((item) => item.image)}
+                progress={progress}
+                running={visible}
+                mobile={mobile}
+                onFallback={() => setEnhanced(false)}
+              />
+            </SceneBoundary>
             <div className="hairstyle-stage-glow" />
           </div>
         )}

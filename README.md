@@ -39,7 +39,13 @@ The hero, service cards, and salon introduction currently identify their photogr
 
 Each `PortfolioItem` has a stable ID, category (`hair` or `nails`), localized title and alt text, image path, optional `before` image path, and a `reference` flag. Add a real `before` image to activate the keyboard-accessible comparison slider and the Before & After filter. Until matching salon images exist, the filter shows an honest empty state.
 
-Reviews use a real author name, Spanish and English text, and source URL. An empty review list displays the salon’s care philosophy instead of fake social proof. Do not mark self-serving reviews with AggregateRating/Review schema to seek Google review stars.
+Reviews preserve each customer’s original wording and include a real author name, rating, displayed date, and Google source URL. An empty snapshot displays an honest linked empty state instead of fake social proof. Do not mark self-serving reviews with AggregateRating/Review schema to seek Google review stars.
+
+The localized `/es/resenas` and `/en/reviews` routes read from `src/lib/google-reviews.generated.ts`. Google exposed no public review rows when this integration was implemented, so the checked-in snapshot is intentionally empty. Export an authenticated JSON snapshot and run `npm run import:google-reviews -- path/to/snapshot.json` to replace it; the importer validates unique IDs, star values, totals, and Google source URLs.
+
+## Andrea chat assistant
+
+Andrea uses a bilingual local flow by default and is hidden unless `NEXT_PUBLIC_ANDREA_ENABLED=true`. The local flow can answer verified basics and prepare a typed lead draft, but it explicitly does not claim to submit or confirm an appointment. Supabase persistence is deferred: implement the `LeadSubmissionAdapter` contract before enabling Andrea publicly. Set `ANDREA_CHAT_PROVIDER=google` plus the documented Google Cloud variables to test a deployed Vertex reasoning engine; provider failures automatically fall back to the local flow. The matching hosted-agent prompt is in `agent/andrea_prompt.py`.
 
 ## Search and advertising
 

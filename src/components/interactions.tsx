@@ -150,10 +150,15 @@ export function Header({ locale, page }: { locale: Locale; page: PageKey }) {
           className="wordmark"
           aria-label="Creiyi's Salon"
         >
-          <span>
-            creiyi's<span className="brand-dot">.</span>
-          </span>
-          <small>BEAUTY SALON</small>
+          <Image
+            className="brand-logo"
+            src="/images/brand/creyis-salon-logo.png"
+            width={512}
+            height={512}
+            sizes="(max-width: 900px) 60px, 72px"
+            alt=""
+            priority
+          />
         </Link>
         <nav
           className="desktop-nav"
@@ -161,7 +166,7 @@ export function Header({ locale, page }: { locale: Locale; page: PageKey }) {
             locale === "es" ? "Navegación principal" : "Main navigation"
           }
         >
-          {(["services", "work", "about", "contact"] as PageKey[]).map(
+          {(["services", "work", "reviews", "about", "contact"] as PageKey[]).map(
             (key) => (
               <Link
                 aria-current={page === key ? "page" : undefined}
@@ -207,7 +212,7 @@ export function Header({ locale, page }: { locale: Locale; page: PageKey }) {
           if ((event.target as HTMLElement).closest("a")) setOpen(false);
         }}
       >
-        {(["home", "services", "work", "about", "contact"] as PageKey[]).map(
+        {(["home", "services", "work", "reviews", "about", "contact"] as PageKey[]).map(
           (key, i) => (
             <Link
               key={key}
