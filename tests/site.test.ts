@@ -3,7 +3,9 @@ import test from "node:test";
 import {
   bookingUrl,
   business,
+  businessHoursSummary,
   businessSchema,
+  GOOGLE_BUSINESS_PROFILE_URL,
   href,
   hairstyles,
   locales,
@@ -44,6 +46,26 @@ test("Google Business Profile details remain exact and callable", () => {
   );
   assert.equal(business.displayPhone, "+1 939-640-5333");
   assert.equal(business.phone, "19396405333");
+  assert.equal(business.googleMaps, GOOGLE_BUSINESS_PROFILE_URL);
+  assert.match(business.googleMaps, /0x69b64d5fa802c7aa/);
+});
+test("business hours contain every localized day in calendar order", () => {
+  assert.equal(business.hours.length, 7);
+  assert.deepEqual(
+    business.hours.map((hour) => hour.schemaDay),
+    ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+  );
+  assert.deepEqual(
+    business.hours.filter((hour) => hour.status === "closed").map((hour) => hour.schemaDay),
+    ["Monday", "Sunday"],
+  );
+  assert.ok(
+    business.hours
+      .filter((hour) => hour.status === "open")
+      .every((hour) => hour.opens === "09:00" && hour.closes === "18:00"),
+  );
+  assert.match(businessHoursSummary("es"), /martes.*sábado.*9:00 a\. m\./i);
+  assert.match(businessHoursSummary("en"), /Tuesday.*Saturday.*9:00 AM/i);
 });
 test("hairstyle showcase contains ten unique salon photographs", () => {
   assert.equal(hairstyles.length, 10);
@@ -119,7 +141,22 @@ test("verified configuration produces one truthful BeautySalon entity", () => {
     "https://salon.example/images/actual-salon.jpg",
   ]);
   assert.equal(schema.address.addressLocality, "San Juan");
+  assert.equal(schema.hasMap, GOOGLE_BUSINESS_PROFILE_URL);
   assert.equal("aggregateRating" in schema, false);
   assert.equal("geo" in schema, false);
-  assert.equal("openingHoursSpecification" in schema, false);
+  assert.deepEqual(
+    schema.openingHoursSpecification,
+    business.hours.map((hour) => ({
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: hour.schemaDay,
+      opens: hour.opens,
+      closes: hour.closes,
+    })),
+  );
+  assert.deepEqual(schema.openingHoursSpecification[0], {
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: "Monday",
+    opens: "00:00",
+    closes: "00:00",
+  });
 });

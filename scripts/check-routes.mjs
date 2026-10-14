@@ -34,6 +34,17 @@ for (const [locale, paths] of Object.entries(pages)) {
     );
     assert.ok(html.includes("+1 939-640-5333"), `Business phone: ${url}`);
     assert.ok(html.includes('href="tel:+19396405333"'), `Phone link: ${url}`);
+    assert.ok(html.includes('class="andrea-widget"'), `Andrea widget: ${url}`);
+    assert.ok(html.includes('class="footer-hours"'), `Footer hours disclosure: ${url}`);
+    assert.ok(
+      html.includes("/images/brand/creiyis-salon-logo-white-bg.png"),
+      `Supplied footer logo: ${url}`,
+    );
+    assert.ok(html.includes("0x69b64d5fa802c7aa"), `Google Business Profile: ${url}`);
+    assert.ok(
+      html.includes(locale === "es" ? "Cerrado" : "Closed"),
+      `Localized closed hours: ${url}`,
+    );
     if (path === "trabajos" || path === "work") {
       assert.ok(
         html.includes("/images/work/hairstyles/01-caramel-pixie.jpg"),
@@ -60,6 +71,47 @@ for (const path of [
 }
 assert.equal((await fetch(origin + "/robots.txt")).status, 200);
 assert.equal((await fetch(origin + "/sitemap.xml")).status, 200);
+const chat = await fetch(origin + "/api/chat", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    message: "What are your hours?",
+    locale: "en",
+    pagePath: "/en",
+  }),
+});
+assert.equal(chat.status, 200);
+const chatBody = await chat.json();
+assert.match(chatBody.reply, /Tuesday.*Saturday.*9:00 AM/i);
+assert.equal(chatBody.state.step, "service");
+let chatState = chatBody.state;
+for (const [message, expectedStep] of [
+  ["hair cut", "name"],
+  ["Jamie Lee", "phone"],
+  ["939-555-1212", "email"],
+  ["skip", "timing"],
+  ["Saturday morning", "notes"],
+  ["Layers", "complete"],
+]) {
+  const response = await fetch(origin + "/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      message,
+      locale: "en",
+      pagePath: "/en",
+      state: chatState,
+    }),
+  });
+  assert.equal(response.status, 200);
+  const result = await response.json();
+  assert.equal(result.state.step, expectedStep);
+  chatState = result.state;
+  if (expectedStep === "complete") {
+    assert.equal(result.draftReady, true);
+    assert.match(result.reply, /not been sent/i);
+  }
+}
 console.log(
-  `Verified ${verified} localized pages with exact footer business details, Spanish redirect, four 404 paths, robots, and sitemap.`,
+  `Verified ${verified} localized pages, footer hours, Google profile, Andrea chat, Spanish redirect, four 404 paths, robots, and sitemap.`,
 );

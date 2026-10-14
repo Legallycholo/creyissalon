@@ -8,6 +8,14 @@ export type PageKey =
   | "contact"
   | "privacy";
 export type Localized = Record<Locale, string>;
+export type BusinessHour = {
+  day: Localized;
+  schemaDay: string;
+  status: "open" | "closed";
+  opens: string;
+  closes: string;
+  display: Localized;
+};
 export const locales: Locale[] = ["es", "en"];
 export const routes: Record<Locale, Record<PageKey, string>> = {
   es: {
@@ -54,6 +62,8 @@ export function siteOrigin(value?: string) {
     return "";
   }
 }
+export const GOOGLE_BUSINESS_PROFILE_URL =
+  "https://www.google.com/maps/place/Creiyi%E2%80%99s+Salon/@18.3894987,-66.1140613,13z/data=!4m10!1m2!2m1!1sCreiyis+salon!3m6!1s0x8c03699ad7b4df63:0x69b64d5fa802c7aa!8m2!3d18.4146874!4d-66.0797551!15sCg1DcmVpeWlzIHNhbG9uWg8iDWNyZWl5aXMgc2Fsb26SAQxiZWF1dHlfc2Fsb26aAURDaTlEUVVsUlFVTnZaRU5vZEhsalJqbHZUMnBDY1ZwdFdrSmhhM1IwV1cxNFlXUXhRbkZTYTFKNllqQnNVbFJ0WXhBQuABAPoBBAgTEDI!16s%2Fg%2F11nvmcrd02?entry=ttu&g_ep=EgoyMDI2MTAxMS4wIKXMDSoASAFQAw%3D%3D";
 export const business = {
   name: "Creiyi's Salon",
   siteUrl: siteOrigin(process.env.NEXT_PUBLIC_SITE_URL),
@@ -67,15 +77,66 @@ export const business = {
     "1003 Cll Alejandria, San Juan, 00920, Puerto Rico",
   latitude: null as number | null,
   longitude: null as number | null,
-  hours: [] as {
-    days: Localized;
-    opens: string;
-    closes: string;
-    schemaDays: string[];
-  }[],
+  hours: [
+    {
+      day: { es: "Lunes", en: "Monday" },
+      schemaDay: "Monday",
+      status: "closed",
+      opens: "00:00",
+      closes: "00:00",
+      display: { es: "Cerrado", en: "Closed" },
+    },
+    {
+      day: { es: "Martes", en: "Tuesday" },
+      schemaDay: "Tuesday",
+      status: "open",
+      opens: "09:00",
+      closes: "18:00",
+      display: { es: "9:00 a. m.–6:00 p. m.", en: "9:00 AM–6:00 PM" },
+    },
+    {
+      day: { es: "Miércoles", en: "Wednesday" },
+      schemaDay: "Wednesday",
+      status: "open",
+      opens: "09:00",
+      closes: "18:00",
+      display: { es: "9:00 a. m.–6:00 p. m.", en: "9:00 AM–6:00 PM" },
+    },
+    {
+      day: { es: "Jueves", en: "Thursday" },
+      schemaDay: "Thursday",
+      status: "open",
+      opens: "09:00",
+      closes: "18:00",
+      display: { es: "9:00 a. m.–6:00 p. m.", en: "9:00 AM–6:00 PM" },
+    },
+    {
+      day: { es: "Viernes", en: "Friday" },
+      schemaDay: "Friday",
+      status: "open",
+      opens: "09:00",
+      closes: "18:00",
+      display: { es: "9:00 a. m.–6:00 p. m.", en: "9:00 AM–6:00 PM" },
+    },
+    {
+      day: { es: "Sábado", en: "Saturday" },
+      schemaDay: "Saturday",
+      status: "open",
+      opens: "09:00",
+      closes: "18:00",
+      display: { es: "9:00 a. m.–6:00 p. m.", en: "9:00 AM–6:00 PM" },
+    },
+    {
+      day: { es: "Domingo", en: "Sunday" },
+      schemaDay: "Sunday",
+      status: "closed",
+      opens: "00:00",
+      closes: "00:00",
+      display: { es: "Cerrado", en: "Closed" },
+    },
+  ] satisfies BusinessHour[],
   instagram: "",
-  googleMaps:
-    "https://www.google.com/maps/search/?api=1&query=1003%20Cll%20Alejandria%2C%20San%20Juan%2C%2000920%2C%20Puerto%20Rico",
+  googleMaps: GOOGLE_BUSINESS_PROFILE_URL,
   googleReviews:
     "https://www.google.com/search?sca_esv=d0fa25ced5188e1a&sxsrf=APpeQnuJkQwbQX2L9sZHsZ7ga3RhWoYX_Q%3A1791648812778&q=Creiyi%E2%80%99s%20Salon&stick=H4sIAAAAAAAAAONgU1I1qLBINjA2s7RMTDFPMklJMzO2Mqgws0wyM0kxTUu0MDBKNk9MXMQq4FyUmlmZ-ahhZrFCcGJOfh4AaPb_rTwAAAA&mat=CUa-0Oee9oz7&ved=2ahUKEwiYwbD466-XAxUmFzQIHSxxDfkQrMcEegQIIRAC#mpd=~18126133762613886534/customers/reviews",
   priceRange: "",
@@ -91,6 +152,20 @@ export function isLaunchReady(details = business) {
   );
 }
 export const launchReady = isLaunchReady();
+export function businessHoursSummary(locale: Locale) {
+  const open = business.hours.filter((hour) => hour.status === "open");
+  const closed = business.hours.filter((hour) => hour.status === "closed");
+  const language = locale === "es" ? "es-PR" : "en-US";
+  const list = new Intl.ListFormat(language, { style: "long", type: "conjunction" });
+  const dayName = (hour: BusinessHour) =>
+    locale === "es" ? hour.day.es.toLowerCase() : hour.day.en;
+  const openDays = list.format(open.map(dayName));
+  const closedDays = list.format(closed.map(dayName));
+  const hours = open[0]?.display[locale];
+  return locale === "es"
+    ? `Abrimos ${openDays} de ${hours}. Cerramos ${closedDays}.`
+    : `We are open ${openDays} from ${hours}. We are closed ${closedDays}.`;
+}
 export function bookingUrl(locale: Locale, service?: string) {
   if (!business.whatsapp) return `${href(locale, "contact")}#reservar`;
   const message =
@@ -267,7 +342,7 @@ export function businessSchema(details = business) {
       ? {
           openingHoursSpecification: business.hours.map((h) => ({
             "@type": "OpeningHoursSpecification",
-            dayOfWeek: h.schemaDays,
+            dayOfWeek: h.schemaDay,
             opens: h.opens,
             closes: h.closes,
           })),

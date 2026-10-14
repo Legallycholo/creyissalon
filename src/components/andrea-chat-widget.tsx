@@ -23,6 +23,18 @@ const language = {
     error:
       "No pude responder en este momento. Puedes llamar al salón al +1 939-640-5333.",
     attention: "¿Pensando en tu próximo look? Estoy aquí para ayudarte.",
+    testMode: "Modo de prueba",
+    summary: "Resumen de tu solicitud",
+    service: "Servicio",
+    name: "Nombre",
+    phone: "Teléfono",
+    email: "Correo",
+    timing: "Horario preferido",
+    notes: "Detalles",
+    notProvided: "No indicado",
+    notSent:
+      "Esta información no fue enviada ni guardada, y no confirma una cita.",
+    restart: "Empezar de nuevo",
   },
   en: {
     greeting:
@@ -38,6 +50,18 @@ const language = {
     error:
       "I couldn’t respond right now. You can call the salon at +1 939-640-5333.",
     attention: "Thinking about your next look? I’m here to help.",
+    testMode: "Test mode",
+    summary: "Request summary",
+    service: "Service",
+    name: "Name",
+    phone: "Phone",
+    email: "Email",
+    timing: "Preferred time",
+    notes: "Details",
+    notProvided: "Not provided",
+    notSent:
+      "This information was not sent or saved, and it does not confirm an appointment.",
+    restart: "Start over",
   },
 } as const;
 
@@ -52,6 +76,7 @@ export default function AndreaChatWidget({ locale }: { locale: Locale }) {
   const [loading, setLoading] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [state, setState] = useState<AndreaChatState | null>(null);
+  const [draftReady, setDraftReady] = useState(false);
   const [attention, setAttention] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
@@ -62,6 +87,7 @@ export default function AndreaChatWidget({ locale }: { locale: Locale }) {
     setMessages([{ id: "greeting", role: "assistant", text: t.greeting }]);
     setState(null);
     setSessionId(null);
+    setDraftReady(false);
   }, [locale, t.greeting]);
 
   useEffect(() => {
@@ -126,10 +152,12 @@ export default function AndreaChatWidget({ locale }: { locale: Locale }) {
         reply?: string;
         sessionId?: string;
         state?: AndreaChatState;
+        draftReady?: boolean;
       };
       if (!response.ok || !result.reply) throw new Error("Chat unavailable");
       if (result.sessionId) setSessionId(result.sessionId);
       if (result.state) setState(result.state);
+      setDraftReady(Boolean(result.draftReady));
       setMessages((current) => [
         ...current,
         { id: `andrea-${Date.now()}`, role: "assistant", text: result.reply! },
@@ -143,6 +171,27 @@ export default function AndreaChatWidget({ locale }: { locale: Locale }) {
       setLoading(false);
     }
   }, [input, loading, locale, sessionId, state, t.error]);
+
+  const restart = useCallback(() => {
+    setMessages([{ id: "greeting", role: "assistant", text: t.greeting }]);
+    setInput("");
+    setLoading(false);
+    setSessionId(null);
+    setState(null);
+    setDraftReady(false);
+    window.requestAnimationFrame(() => inputRef.current?.focus());
+  }, [t.greeting]);
+
+  const summaryFields: [string, string | undefined][] = state
+    ? [
+        [t.service, state.lead.service],
+        [t.name, state.lead.name],
+        [t.phone, state.lead.phone],
+        [t.email, state.lead.email],
+        [t.timing, state.lead.preferredTime],
+        [t.notes, state.lead.notes],
+      ]
+    : [];
 
   return (
     <div className="andrea-widget">
@@ -179,6 +228,24 @@ export default function AndreaChatWidget({ locale }: { locale: Locale }) {
             <div className="andrea-message assistant andrea-typing" aria-label="Andrea is typing">
               <span aria-hidden="true">A</span><p><i /><i /><i /></p>
             </div>
+          )}
+          {draftReady && state?.step === "complete" && (
+            <section className="andrea-summary" aria-label={t.summary}>
+              <span className="andrea-test-badge">{t.testMode}</span>
+              <h3>{t.summary}</h3>
+              <dl>
+                {summaryFields.map(([label, value]) => (
+                  <div key={label}>
+                    <dt>{label}</dt>
+                    <dd>{value || t.notProvided}</dd>
+                  </div>
+                ))}
+              </dl>
+              <p>{t.notSent}</p>
+              <button type="button" onClick={restart}>
+                {t.restart}
+              </button>
+            </section>
           )}
           <div ref={endRef} />
         </div>

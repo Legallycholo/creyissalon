@@ -60,7 +60,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     description,
     icons: {
       icon: [{ url: "/favicon.png", type: "image/png", sizes: "64x64" }],
-      apple: "/images/brand/creyis-salon-logo.png",
+      apple: "/images/brand/creiyis-salon-logo-white-bg.png",
     },
     robots: { index: launchReady, follow: launchReady },
     ...(business.siteUrl

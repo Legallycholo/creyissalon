@@ -5,6 +5,8 @@ import {
   type AndreaLeadDraft,
   type LeadSubmissionAdapter,
 } from "../src/lib/andrea";
+import { isAndreaEnabled } from "../src/lib/andrea-config";
+import { POST } from "../src/app/api/chat/route";
 
 function reply(message: string, state?: unknown, locale: "es" | "en" = "es") {
   return runLocalAndrea({ message, state, locale, pagePath: `/${locale}` });
@@ -44,6 +46,32 @@ test("Andrea answers only verified business facts", () => {
   const price = reply("¿Cuánto cuesta?");
   assert.match(price.reply, /confirmará el precio/);
   assert.doesNotMatch(price.reply, /\$/);
+  const hours = reply("¿Cuál es el horario?");
+  assert.match(hours.reply, /martes.*sábado.*9:00 a\. m\./i);
+  assert.match(hours.reply, /lunes.*domingo|domingo.*lunes/i);
+  const englishHours = reply("What are your hours?", undefined, "en");
+  assert.match(englishHours.reply, /Tuesday.*Saturday.*9:00 AM/i);
+});
+
+test("Andrea enablement is shared and the disabled API is unavailable", async () => {
+  const original = process.env.NEXT_PUBLIC_ANDREA_ENABLED;
+  try {
+    process.env.NEXT_PUBLIC_ANDREA_ENABLED = "false";
+    assert.equal(isAndreaEnabled(), false);
+    const response = await POST(
+      new Request("http://localhost/api/chat", {
+        method: "POST",
+        body: JSON.stringify({ message: "hello" }),
+      }),
+    );
+    assert.equal(response.status, 404);
+    assert.deepEqual(await response.json(), { error: "Chat is not enabled." });
+    process.env.NEXT_PUBLIC_ANDREA_ENABLED = "true";
+    assert.equal(isAndreaEnabled(), true);
+  } finally {
+    if (original === undefined) delete process.env.NEXT_PUBLIC_ANDREA_ENABLED;
+    else process.env.NEXT_PUBLIC_ANDREA_ENABLED = original;
+  }
 });
 
 test("a fake submission adapter can exercise the future contract", async () => {

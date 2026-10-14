@@ -31,7 +31,7 @@ Create `.env.local` from the example and fill in the actual values. Do not put s
 
 Until the public origin, physical address, city, phone, and WhatsApp number are configured, the site explicitly remains a preview: search indexing is disabled, its sitemap is empty, and incomplete business structured data is omitted. Unconfigured booking and phone buttons lead to an explanatory contact section. They never send to a sample phone number or claim a booking succeeded.
 
-Before launch, confirm the exact brand spelling and logo; replace reference photographs with authorized salon images; supply the location, hours, map link, and social profiles; provide the service list and actual policies; and review both translations. Add real customer reviews with source links and authorization. No ratings, customer counts, credentials, guarantees, or testimonials have been fabricated.
+Before launch, confirm the exact brand spelling and logo; replace reference photographs with authorized salon images; supply social profiles; provide the service list and actual policies; and review both translations. The location, regular hours, and Google Business Profile link are configured from the verified business details. Add real customer reviews with source links and authorization. No ratings, customer counts, credentials, guarantees, or testimonials have been fabricated.
 
 The hero, service cards, and salon introduction currently identify their photographs as references. Replace both the files and corresponding alt text/captions when real photographs are supplied. Remove the inspiration labels only from actual salon work. The gallery section introduction should then be revised to describe the real portfolio. Add verified salon image paths to `business.images` to include them in structured data.
 
@@ -45,7 +45,9 @@ The localized `/es/resenas` and `/en/reviews` routes read from `src/lib/google-r
 
 ## Andrea chat assistant
 
-Andrea uses a bilingual local flow by default and is hidden unless `NEXT_PUBLIC_ANDREA_ENABLED=true`. The local flow can answer verified basics and prepare a typed lead draft, but it explicitly does not claim to submit or confirm an appointment. Supabase persistence is deferred: implement the `LeadSubmissionAdapter` contract before enabling Andrea publicly. Set `ANDREA_CHAT_PROVIDER=google` plus the documented Google Cloud variables to test a deployed Vertex reasoning engine; provider failures automatically fall back to the local flow. The matching hosted-agent prompt is in `agent/andrea_prompt.py`.
+Andrea uses a bilingual local flow by default and is hidden unless `NEXT_PUBLIC_ANDREA_ENABLED=true`. For local testing, create `.env.local` with that flag set to `true` and `ANDREA_CHAT_PROVIDER=local`; set the same values in a staging environment to test a preview deployment. The local flow answers verified business facts, collects a lead draft, displays a browser-only test summary, and clearly states that nothing was sent, saved, or confirmed. Production should remain disabled until a real lead destination is approved.
+
+Set `ANDREA_CHAT_PROVIDER=google` plus `GOOGLE_CLOUD_PROJECT`, `GOOGLE_CLOUD_LOCATION`, `GOOGLE_AGENT_RESOURCE_ID`, and `GOOGLE_SERVICE_ACCOUNT_JSON` to test a deployed Vertex reasoning engine. Provider failures automatically fall back to the local flow. The matching hosted-agent prompt is in `agent/andrea_prompt.py`; redeploy that prompt to the reasoning engine after changing verified business facts. Service-account JSON is server-only and must never use the `NEXT_PUBLIC_` prefix.
 
 ## Search and advertising
 

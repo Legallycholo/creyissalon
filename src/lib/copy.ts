@@ -18,7 +18,7 @@ const es = {
   more: "Conoce el salón",
   reference: "Imagen de inspiración",
   preview:
-    "Vista previa de diseño · WhatsApp, horario y reseñas pendientes de confirmar.",
+    "Vista previa de diseño · WhatsApp y reseñas pendientes de confirmar.",
   eyebrow: "BELLEZA CON INTENCIÓN · PUERTO RICO",
   heroFirst: "Tu belleza.",
   heroSecond: "Tu momento.",
@@ -178,7 +178,7 @@ const en: typeof es = {
   more: "Meet the salon",
   reference: "Inspiration image",
   preview:
-    "Design preview · WhatsApp, business hours, and reviews await confirmation.",
+    "Design preview · WhatsApp and reviews await confirmation.",
   eyebrow: "BEAUTY WITH INTENTION · PUERTO RICO",
   heroFirst: "Your beauty.",
   heroSecond: "Your moment.",

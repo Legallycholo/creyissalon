@@ -60,6 +60,24 @@ function Buttons({ locale, placement }: { locale: Locale; placement: string }) {
     </div>
   );
 }
+function BusinessHoursList({ locale }: { locale: Locale }) {
+  return (
+    <ul className="business-hours-list">
+      {business.hours.map((hour) => (
+        <li
+          key={hour.schemaDay}
+          className={hour.status === "closed" ? "is-closed" : undefined}
+        >
+          <span>{hour.day[locale]}</span>
+          <span>
+            {hour.status === "closed" && <span className="status-mark" aria-hidden="true" />}
+            {hour.display[locale]}
+          </span>
+        </li>
+      ))}
+    </ul>
+  );
+}
 export function Shell({
   locale,
   page,
@@ -83,9 +101,9 @@ export function Shell({
             <Link href={href(locale)} className="wordmark footer-brand">
               <Image
                 className="brand-logo"
-                src="/images/brand/creyis-salon-logo.png"
-                width={512}
-                height={512}
+                src="/images/brand/creiyis-salon-logo-white-bg.png"
+                width={1464}
+                height={1504}
                 sizes="110px"
                 alt=""
               />
@@ -124,6 +142,13 @@ export function Shell({
                 <span>{business.displayPhone}</span>
               </a>
             </address>
+            <details className="footer-hours">
+              <summary>
+                <Clock3 size={18} strokeWidth={1.35} aria-hidden="true" />
+                <span>{t.hours}</span>
+              </summary>
+              <BusinessHoursList locale={locale} />
+            </details>
             {business.instagram && (
               <a
                 href={business.instagram}
@@ -532,15 +557,7 @@ export function Visit({
             <div>
               <Clock3 size={22} strokeWidth={1.25} />
               <h3>{t.hours}</h3>
-              {business.hours.length ? (
-                business.hours.map((h) => (
-                  <p key={h.days.es}>
-                    {h.days[locale]} · {h.opens}–{h.closes}
-                  </p>
-                ))
-              ) : (
-                <p>{t.hoursPending}</p>
-              )}
+              <BusinessHoursList locale={locale} />
             </div>
             <div>
               <Phone size={22} strokeWidth={1.25} />

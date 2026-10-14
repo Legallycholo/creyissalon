@@ -1,4 +1,4 @@
-import type { Locale } from "./site";
+import { businessHoursSummary, type Locale } from "./site";
 
 export type AndreaChatStep =
   | "service"
@@ -121,9 +121,7 @@ function answerKnownQuestion(message: string, locale: Locale) {
       : "Prices depend on the service. The salon will confirm the price, duration, and what is included before booking.";
   }
   if (/\b(hour|hours|open|schedule|horario|abren|cierran)\b/.test(normalized)) {
-    return locale === "es"
-      ? "El horario todavía no está publicado. El salón puede confirmarlo cuando se comuniquen contigo."
-      : "Business hours have not been published yet. The salon can confirm them when they contact you.";
+    return businessHoursSummary(locale);
   }
   if (/\b(where|address|location|dónde|donde|dirección|ubicación)\b/.test(normalized)) {
     return locale === "es"
